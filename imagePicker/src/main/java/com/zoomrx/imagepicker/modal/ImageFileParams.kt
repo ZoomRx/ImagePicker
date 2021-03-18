@@ -1,4 +1,4 @@
-package com.zoomrx.camera.modal
+package com.zoomrx.imagepicker.modal
 
 data class ImageFileParams(val directoryToCopy: String) {
     var fileNamePrefix = "IMG"

@@ -1,4 +1,4 @@
-package com.zoomrx.camera.modal
+package com.zoomrx.imagepicker.modal
 
 import android.graphics.Color
 import java.io.File

@@ -1,4 +1,4 @@
-package com.zoomrx.camera
+package com.zoomrx.imagepicker
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
@@ -22,12 +22,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.selection.*
 import androidx.recyclerview.widget.RecyclerView
 import com.yalantis.ucrop.UCrop
-import com.zoomrx.camera.ThumbnailList.CustomItemDetailsLookup
-import com.zoomrx.camera.ThumbnailList.CustomItemKeyProvider
-import com.zoomrx.camera.ThumbnailList.ThumbnailListAdapter
-import com.zoomrx.camera.camera.R
-import com.zoomrx.camera.modal.EditorParams
-import com.zoomrx.camera.modal.ImageFileParams
+import com.zoomrx.imagepicker.ThumbnailList.CustomItemDetailsLookup
+import com.zoomrx.imagepicker.ThumbnailList.CustomItemKeyProvider
+import com.zoomrx.imagepicker.ThumbnailList.ThumbnailListAdapter
+import com.zoomrx.imagepicker.modal.EditorParams
+import com.zoomrx.imagepicker.modal.ImageFileParams
 import kotlinx.coroutines.*
 import java.io.File
 import kotlin.math.roundToInt

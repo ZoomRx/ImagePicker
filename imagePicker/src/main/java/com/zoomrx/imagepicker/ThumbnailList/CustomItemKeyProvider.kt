@@ -1,4 +1,4 @@
-package com.zoomrx.camera.ThumbnailList
+package com.zoomrx.imagepicker.ThumbnailList
 
 import androidx.recyclerview.selection.ItemKeyProvider
 

@@ -1,9 +1,7 @@
-package com.zoomrx.camera
+package com.zoomrx.imagepicker
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
 
 class PluginActivity : AppCompatActivity() {
 

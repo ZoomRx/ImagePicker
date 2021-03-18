@@ -1,8 +1,9 @@
-package com.zoomrx.camera.ThumbnailList
+package com.zoomrx.imagepicker.ThumbnailList
 
 import android.view.MotionEvent
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
+import com.zoomrx.imagepicker.ThumbnailList.ThumbnailListAdapter
 
 class CustomItemDetailsLookup(private val recyclerView: RecyclerView) : ItemDetailsLookup<String>() {
     override fun getItemDetails(event: MotionEvent): ItemDetails<String>? {

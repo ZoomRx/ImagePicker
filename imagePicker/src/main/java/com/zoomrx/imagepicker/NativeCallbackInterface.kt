@@ -1,4 +1,4 @@
-package com.zoomrx.camera
+package com.zoomrx.imagepicker
 
 interface NativeCallbackInterface {
     fun resolve(filePathArray: ArrayList<String>, captionArray: ArrayList<String>?)

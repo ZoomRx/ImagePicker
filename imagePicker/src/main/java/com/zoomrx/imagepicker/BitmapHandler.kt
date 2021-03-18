@@ -1,4 +1,4 @@
-package com.zoomrx.camera
+package com.zoomrx.imagepicker
 
 import android.content.ContentResolver
 import android.graphics.Bitmap

@@ -1,4 +1,4 @@
-package com.zoomrx.camera
+package com.zoomrx.imagepicker
 
 import android.Manifest
 import android.animation.ObjectAnimator
@@ -28,8 +28,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.yalantis.ucrop.util.ImageHeaderParser.UNKNOWN_ORIENTATION
-import com.zoomrx.camera.camera.R
-import com.zoomrx.camera.modal.CameraParams
+import com.zoomrx.imagepicker.modal.CameraParams
 import java.util.concurrent.ExecutorService
 
 class CameraFragment: Fragment(R.layout.camera_layout) {

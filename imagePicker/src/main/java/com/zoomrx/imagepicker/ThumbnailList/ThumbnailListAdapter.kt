@@ -1,4 +1,4 @@
-package com.zoomrx.camera.ThumbnailList
+package com.zoomrx.imagepicker.ThumbnailList
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,9 +10,9 @@ import android.widget.ImageView
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
-import com.zoomrx.camera.BitmapHandler
-import com.zoomrx.camera.EditFragment
-import com.zoomrx.camera.camera.R
+import com.zoomrx.imagepicker.BitmapHandler
+import com.zoomrx.imagepicker.EditFragment
+import com.zoomrx.imagepicker.R
 import kotlinx.coroutines.*
 import kotlin.math.roundToInt
 

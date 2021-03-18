@@ -1,4 +1,4 @@
-package com.zoomrx.camera.modal
+package com.zoomrx.imagepicker.modal
 
 import java.io.File
 

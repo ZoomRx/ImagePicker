@@ -10,12 +10,12 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
-        android:name="com.zoomrx.camera.CustomApplication">
+        android:name="com.zoomrx.imagepicker.CustomApplication">
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.zoomrx.camera.PluginActivity"
+        <activity android:name="com.zoomrx.imagepicker.PluginActivity"
             android:theme="@style/Theme.Design.NoActionBar" />
     </application>
 

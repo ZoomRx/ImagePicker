@@ -1,4 +1,4 @@
-package com.zoomrx.camera
+package com.zoomrx.imagepicker
 
 import android.content.ContentValues
 import android.content.Context
@@ -11,21 +11,19 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.ImageCapture
-import com.zoomrx.camera.modal.CameraParams
-import com.zoomrx.camera.modal.EditorParams
-import com.zoomrx.camera.modal.GalleryParams
-import com.zoomrx.camera.modal.ImageFileParams
-import org.json.JSONArray
-import org.json.JSONObject
+import com.zoomrx.imagepicker.modal.CameraParams
+import com.zoomrx.imagepicker.modal.EditorParams
+import com.zoomrx.imagepicker.modal.GalleryParams
+import com.zoomrx.imagepicker.modal.ImageFileParams
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 class ImagePicker(
-        val context: Context,
-        val imageFileParams: ImageFileParams,
-        val editorParams: EditorParams?,
-        val nativeCallback: NativeCallbackInterface
+    val context: Context,
+    val imageFileParams: ImageFileParams,
+    val editorParams: EditorParams?,
+    val nativeCallback: NativeCallbackInterface
 ) {
     object PhotoSource {
         const val CAMERA = 0
@@ -133,7 +131,9 @@ class ImagePicker(
                             if (uri.path != null) {
                                 imagePropArray.add(EditFragment.ImageProp(uri.path!!, uri, null, null, null))
                             } else {
-                                nativeCallback.reject("Error in fetching URIs of some files", ErrorCodes.GALLERY_FILE_URI)
+                                nativeCallback.reject("Error in fetching URIs of some files",
+                                    ErrorCodes.GALLERY_FILE_URI
+                                )
                                 return@registerForActivityResult
                             }
                         }
@@ -144,7 +144,9 @@ class ImagePicker(
                             if (uri.path != null) {
                                 filePathArray.add(uri.path!!)
                             } else {
-                                nativeCallback.reject("Error in fetching URIs of some files", ErrorCodes.GALLERY_FILE_URI)
+                                nativeCallback.reject("Error in fetching URIs of some files",
+                                    ErrorCodes.GALLERY_FILE_URI
+                                )
                                 return@registerForActivityResult
                             }
                         }
@@ -170,7 +172,9 @@ class ImagePicker(
                             nativeCallback.resolve(copyImageFiles(imageFileParams.directoryToCopy, arrayOf(uri)), null)
                         }
                     } else {
-                        nativeCallback.reject("Error in fetching URI of the file", ErrorCodes.GALLERY_FILE_URI)
+                        nativeCallback.reject("Error in fetching URI of the file",
+                            ErrorCodes.GALLERY_FILE_URI
+                        )
                         return@registerForActivityResult
                     }
                 } else {
