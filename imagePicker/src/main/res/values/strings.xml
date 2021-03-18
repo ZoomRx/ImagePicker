@@ -1,0 +1,16 @@
+<resources>
+    <string name="my_string">Just a simple string</string>
+    <string name="take_photo">Take photo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="thumbnail_desc">Thumbnail for a selected picture</string>
+    <string name="full_preview">Full preview of selected thumbnail</string>
+    <string name="checkbox">CheckBox</string>
+    <string name="caption_hint">Enter a caption</string>
+    <string name="back_button">back button</string>
+    <string name="crop_and_rotate_action_button">crop and rotate action button</string>
+    <string name="remove_this_image">Remove this image</string>
+    <string name="send_button">Send button</string>
+    <string name="flash_button_desc">Flash option</string>
+    <string name="flip_camera_desc">flip camera</string>
+</resources>

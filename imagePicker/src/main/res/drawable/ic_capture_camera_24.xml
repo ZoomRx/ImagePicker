@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="72dp"
+            android:height="72dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:name="outer_circle"
+                android:strokeWidth="1"
+                android:strokeColor="@android:color/white"
+                android:fillColor="@android:color/white"
+                android:pathData="M0.5,12 A11,11 0 0,1 23.5,12 A11,11 0 0,1 0.5,12" />
+            <group
+                android:name="inner_circle"
+                android:pivotX="12"
+                android:pivotY="12"
+                android:scaleX="1"
+                android:scaleY="1">
+                <path
+                    android:fillColor="@android:color/darker_gray"
+                    android:pathData="M1,12 A10,10 0 0,1 23,12 A10,10 0 0,1 1,12" />
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="inner_circle">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <set>
+                    <objectAnimator
+                        android:propertyName="scaleX"
+                        android:valueFrom="1"
+                        android:valueTo="0.9"
+                        android:duration="100"
+                        android:valueType="floatType" />
+                    <objectAnimator
+                        android:propertyName="scaleY"
+                        android:valueFrom="1"
+                        android:valueTo="0.9"
+                        android:duration="100"
+                        android:valueType="floatType" />
+                </set>
+                <set>
+                    <objectAnimator
+                        android:propertyName="scaleX"
+                        android:valueFrom="0.9"
+                        android:valueTo="1"
+                        android:duration="100"
+                        android:valueType="floatType" />
+                    <objectAnimator
+                        android:propertyName="scaleY"
+                        android:valueFrom="0.9"
+                        android:valueTo="1"
+                        android:duration="100"
+                        android:valueType="floatType" />
+                </set>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

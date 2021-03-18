@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:background="@android:color/black">
+
+    <ProgressBar
+        android:id="@+id/indeterminateBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/navBarLayout"
+        android:foregroundGravity="center"/>
+
+    <ImageView
+        android:id="@+id/image_full_preview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:contentDescription="@string/full_preview"
+        app:layout_constraintBottom_toTopOf="@id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/navBarLayout" />
+
+    <LinearLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        android:layout_height="0dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ThumbnailList"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/list_item_height"
+            android:layout_marginBottom="10dp"
+            android:layoutDirection="ltr"
+            android:orientation="horizontal"
+            android:overScrollMode="ifContentScrolls"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/captionAndSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="15dp"
+            android:orientation="horizontal"
+            android:gravity="end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <EditText
+                android:id="@+id/CaptionEditText"
+                android:layout_height="@dimen/caption_edit_text_height"
+                android:autofillHints=""
+                android:background="@drawable/caption_box_background"
+                android:hint="@string/caption_hint"
+                android:inputType="textShortMessage"
+                android:textColorHint="@color/caption_hint_color"
+                android:textColor="@android:color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:id="@+id/send_button"
+                android:layout_width="@dimen/send_button_width"
+                android:layout_height="@dimen/send_button_height"
+                android:background="@drawable/send_button_background"
+                android:backgroundTint="@android:color/white"
+                android:scaleType="fitXY"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/send_button"
+                app:layout_constraintEnd_toEndOf="@id/relativeLayout"
+                app:srcCompat="@drawable/ic_send"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/navBarLayout"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/nav_bar_height"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="@dimen/nav_bar_item_width"
+            android:layout_height="match_parent"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/remove_this_image"
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/ic_delete_forever_black_24dp"
+            app:layout_constraintEnd_toStartOf="@id/crop_rotate_button"/>
+
+        <ImageButton
+            android:id="@+id/crop_rotate_button"
+            android:layout_width="@dimen/nav_bar_item_width"
+            android:layout_height="match_parent"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/crop_and_rotate_action_button"
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/ic_crop_rotate_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="@dimen/nav_bar_item_width"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/back_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp"
+            android:backgroundTint="@android:color/transparent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

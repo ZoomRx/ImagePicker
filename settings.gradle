@@ -1,0 +1,2 @@
+include ':imagePicker'
+rootProject.name = "ImagePicker"
