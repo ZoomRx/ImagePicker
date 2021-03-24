@@ -3,7 +3,7 @@ package com.zoomrx.imagepicker
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-class PluginActivity : AppCompatActivity() {
+class ImagePickerActivity : AppCompatActivity() {
 
     object Constants {
         const val ACTIVITY_CREATED_CALLBACK_KEY = "activityCreatedCallbackId"

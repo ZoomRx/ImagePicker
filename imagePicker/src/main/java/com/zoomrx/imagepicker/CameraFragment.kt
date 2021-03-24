@@ -34,7 +34,6 @@ import java.util.concurrent.ExecutorService
 class CameraFragment: Fragment(R.layout.camera_layout) {
     private var imageCapture: ImageCapture = ImageCapture.Builder().build()
     var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     lateinit var preview: Preview
     lateinit var cameraProvider: ProcessCameraProvider
     lateinit var callBack: (Uri?, Int?, String?) -> Unit
@@ -120,17 +119,6 @@ class CameraFragment: Fragment(R.layout.camera_layout) {
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                startCamera()
-            } else {
-                callBack(null, ErrorCodes.PERMISSION_NOT_GRANTED, "Camera permission not granted")
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         previousOrientation = requireActivity().requestedOrientation
@@ -151,11 +139,7 @@ class CameraFragment: Fragment(R.layout.camera_layout) {
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
         imageCapture.flashMode = ImageCapture.FLASH_MODE_OFF
-        if (isPermissionGranted()) {
-            startCamera()
-        } else {
-            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
-        }
+        startCamera()
 
         // Set up the listener for take photo button
         val cameraButton = view.findViewById<ImageButton>(R.id.captureButton)
@@ -257,8 +241,6 @@ class CameraFragment: Fragment(R.layout.camera_layout) {
                 this, cameraSelector, preview, imageCapture)
     }
 
-    private fun isPermissionGranted() = ContextCompat.checkSelfPermission(requireContext(), REQUIRED_PERMISSION) == PackageManager.PERMISSION_GRANTED
-
     override fun onStop() {
         super.onStop()
         activity?.requestedOrientation = previousOrientation
@@ -274,6 +256,5 @@ class CameraFragment: Fragment(R.layout.camera_layout) {
 
     companion object {
         private const val TAG = "CameraXBasic"
-        private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
     }
 }

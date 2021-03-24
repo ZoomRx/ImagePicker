@@ -27,20 +27,18 @@ import com.zoomrx.imagepicker.ThumbnailList.CustomItemKeyProvider
 import com.zoomrx.imagepicker.ThumbnailList.ThumbnailListAdapter
 import com.zoomrx.imagepicker.modal.EditorParams
 import com.zoomrx.imagepicker.modal.ImageFileParams
+import com.zoomrx.imagepicker.modal.ImageProp
 import kotlinx.coroutines.*
 import java.io.File
 import kotlin.math.roundToInt
 
 /**
  * A simple [Fragment] subclass.
- * Use the [EditFragment.newInstance] factory method to
+ * Use the [EditorFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class EditFragment : Fragment() {
+class EditorFragment : Fragment() {
 
-    data class ImageProp(val filePath: String, val originalUri: Uri, var fullSizeBitmap: Bitmap?, var thumbnailBitmap: Bitmap?, var editedUri: Uri?, var captionText: String = "")
-
-    // TODO: Rename and change types of parameters
     val imagePropArray = ArrayList<ImageProp>()
     private val fullBitmapJobArray = ArrayList<Job>()
     lateinit var selectedImageProp: ImageProp
@@ -50,6 +48,7 @@ class EditFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var imageView: ImageView
     private lateinit var captionEditText: EditText
+    lateinit var userInputLayout: LinearLayout
     lateinit var editorParams: EditorParams
     lateinit var imageFileParams: ImageFileParams
     lateinit var backPressedListener: (Int) -> Unit
@@ -83,16 +82,21 @@ class EditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applyCustomTheme(view)
         recyclerView = view.findViewById(R.id.ThumbnailList)
         progressBar = view.findViewById(R.id.indeterminateBar)
         imageView = view.findViewById(R.id.image_full_preview)
+        userInputLayout = view.findViewById(R.id.relativeLayout)
         captionEditText = view.findViewById(R.id.CaptionEditText)
         if (editorParams.allowCaption) {
             captionEditText.addTextChangedListener {
                 imagePropArray[selectedItemPosition].captionText = it.toString()
             }
         }
+        var index = imagePropArray.size - 1
+        while (index > editorParams.maxSelection) {
+            imagePropArray.removeAt(index--)
+        }
+
         adapter = ThumbnailListAdapter(imagePropArray, requireContext(), coroutineIOScope) {
             selectedImageChanged(it)
         }.also {
@@ -121,20 +125,26 @@ class EditFragment : Fragment() {
         }
         onImagesReceived(imagePropArray, true)
         forceSelectImage(selectedItemPosition)
+        val deleteButton = view.findViewById<ImageButton>(R.id.delete_button)
+        if (imagePropArray.size > 1) {
+            if (editorParams.allowDeletion) {
+                deleteButton.setOnClickListener {
+                    onImageDeleted(selectedItemPosition)
+                }
+            } else {
+                deleteButton.visibility = View.GONE
+            }
+        } else {
+            recyclerView.visibility = View.GONE
+        }
+        applyCustomTheme(view)
         view.findViewById<ImageButton>(R.id.crop_rotate_button).setOnClickListener {
             handleCropRotateButtonClick()
         }
         view.findViewById<ImageButton>(R.id.back_button).setOnClickListener {
             handleBackPressedEvent()
         }
-        val deleteButton = view.findViewById<ImageButton>(R.id.delete_button)
-        if (editorParams.allowDeletion) {
-            deleteButton.setOnClickListener {
-                onImageDeleted(selectedItemPosition)
-            }
-        } else {
-            deleteButton.visibility = View.GONE
-        }
+
         view.findViewById<ImageButton>(R.id.send_button).setOnClickListener {
             handleSendButtonClick()
         }
@@ -142,13 +152,15 @@ class EditFragment : Fragment() {
 
     private fun applyCustomTheme(view: View) {
         val navBar = view.findViewById<ConstraintLayout>(R.id.navBarLayout)
-        navBar.setBackgroundColor(editorParams.navBarTint)
+        navBar.background.setTint(editorParams.navBarTint)
         navBar.children.iterator().forEach {
             ((it as ImageButton).drawable as VectorDrawable).setTint(editorParams.navButtonTint)
         }
         val sendButton = view.findViewById<ImageButton>(R.id.send_button)
         (sendButton.drawable as VectorDrawable).setTint(editorParams.navButtonTint)
         sendButton.background.setTint(editorParams.navBarTint)
+        imageView.setBackgroundColor(editorParams.backgroundColor)
+        userInputLayout.setBackgroundColor(editorParams.backgroundColor)
     }
 
     private fun handleSendButtonClick() {
@@ -275,12 +287,11 @@ class EditFragment : Fragment() {
          * this fragment using the provided parameters.
          *
          * @param param1 - The initial array list of properties of images chosen.
-         * @return A new instance of fragment EditFragment.
+         * @return A new instance of fragment EditorFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: ArrayList<ImageProp>, editorParams: EditorParams) =
-            EditFragment().apply {
+            EditorFragment().apply {
                 imagePropArray += param1
                 selectedImageProp = imagePropArray[0]
                 this.editorParams = editorParams

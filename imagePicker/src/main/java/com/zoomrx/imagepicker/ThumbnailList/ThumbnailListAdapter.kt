@@ -11,13 +11,13 @@ import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.zoomrx.imagepicker.BitmapHandler
-import com.zoomrx.imagepicker.EditFragment
 import com.zoomrx.imagepicker.R
+import com.zoomrx.imagepicker.modal.ImageProp
 import kotlinx.coroutines.*
 import kotlin.math.roundToInt
 
 class ThumbnailListAdapter(
-        val imagePropArrayList: ArrayList<EditFragment.ImageProp>,
+        val imagePropArrayList: ArrayList<ImageProp>,
         private val context: Context, val coroutineIOScope: CoroutineScope, private val activatedListener: (Int) -> Unit)
     : RecyclerView.Adapter<ThumbnailListAdapter.ViewHolder>() {
     /**
@@ -27,7 +27,7 @@ class ThumbnailListAdapter(
     var selectionTracker: SelectionTracker<String>? = null
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.findViewById(R.id.item_image)
-        var imageProp: EditFragment.ImageProp? = null
+        var imageProp: ImageProp? = null
         init {
             // Define click listener for the ViewHolder's View.
 

@@ -2,6 +2,23 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'maven-publish'
+    id 'maven'
+}
+
+configurations {
+    deployerJars
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+        repository(url: "scpexe://prem.kumar@34.199.164.104/home/prem.kumar") {
+
+        }
+        pom.groupId = 'com.zoomrx.imagepicker'
+        pom.artifactId = 'imagepicker-debug-test'
+        pom.version = '3.0'
+    }
 }
 
 afterEvaluate {
@@ -26,6 +43,12 @@ afterEvaluate {
                 artifactId = 'imagepicker-debug'
                 version = '1.0'
             }
+        }
+    }
+
+    repositories {
+        maven {
+            url("sftp://prem.kumar@34.199.164.104:/home/podB/.m2/repository")
         }
     }
 }
@@ -59,6 +82,8 @@ android {
 }
 
 dependencies {
+
+    deployerJars 'org.apache.maven.wagon:wagon-ssh-external:3.4.3'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'

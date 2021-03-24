@@ -79,13 +79,14 @@
                 android:id="@+id/send_button"
                 android:layout_width="@dimen/send_button_width"
                 android:layout_height="@dimen/send_button_height"
+                android:tint="@android:color/white"
+                android:backgroundTint="#0B6EF4"
                 android:background="@drawable/send_button_background"
-                android:backgroundTint="@android:color/white"
-                android:scaleType="fitXY"
+                android:scaleType="centerInside"
                 android:layout_marginStart="10dp"
                 android:contentDescription="@string/send_button"
                 app:layout_constraintEnd_toEndOf="@id/relativeLayout"
-                app:srcCompat="@drawable/ic_send"
+                app:srcCompat="@drawable/ic_send_black_24dp"
                 android:layout_gravity="center" />
 
         </LinearLayout>
@@ -96,6 +97,7 @@
         android:id="@+id/navBarLayout"
         android:layout_width="0dp"
         android:layout_height="@dimen/nav_bar_height"
+        android:background="@drawable/nav_bar_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
