@@ -5,10 +5,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.webkit.MimeTypeMap
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.ImageCapture
@@ -153,6 +156,7 @@ class ImagePicker(
             putExtra(ImagePickerActivity.Constants.ACTIVITY_CREATED_CALLBACK_KEY, appContext.registerActivityCreatedCallback {
                 imagePickerActivity = it as ImagePickerActivity
                 val requiredPermission = Manifest.permission.READ_EXTERNAL_STORAGE
+                createGalleryActivityLauncher()
                 if (isPermissionGranted(requiredPermission)) {
                     startGalleryActivity()
                 } else {
@@ -169,7 +173,7 @@ class ImagePicker(
         })
     }
 
-    private fun startGalleryActivity() {
+    private fun createGalleryActivityLauncher() {
         galleryActivityResultLauncher = if (galleryParams.allowMultiple) {
             imagePickerActivity.registerForActivityResult(
                     ActivityResultContracts.GetMultipleContents()
@@ -182,7 +186,7 @@ class ImagePicker(
                                 imagePropArray.add(ImageProp(uri.path!!, uri, null, null, null))
                             } else {
                                 nativeCallback.reject("Error in fetching URIs of some files",
-                                    ErrorCodes.GALLERY_FILE_URI
+                                        ErrorCodes.GALLERY_FILE_URI
                                 )
                                 return@registerForActivityResult
                             }
@@ -195,7 +199,7 @@ class ImagePicker(
                                 filePathArray.add(uri.path!!)
                             } else {
                                 nativeCallback.reject("Error in fetching URIs of some files",
-                                    ErrorCodes.GALLERY_FILE_URI
+                                        ErrorCodes.GALLERY_FILE_URI
                                 )
                                 return@registerForActivityResult
                             }
@@ -223,7 +227,7 @@ class ImagePicker(
                         }
                     } else {
                         nativeCallback.reject("Error in fetching URI of the file",
-                            ErrorCodes.GALLERY_FILE_URI
+                                ErrorCodes.GALLERY_FILE_URI
                         )
                         return@registerForActivityResult
                     }
@@ -233,6 +237,9 @@ class ImagePicker(
                 }
             }
         }
+    }
+
+    private fun startGalleryActivity() {
         galleryActivityResultLauncher.launch("image/*")
     }
 
@@ -242,10 +249,18 @@ class ImagePicker(
             directoryFile.mkdirs()
         val copiedFilesPath = arrayListOf<String>()
         fileUriArrayList.forEach { uri ->
-            val fileName = uri.path!!.substring(uri.path!!.lastIndexOf('/') + 1)
+            var fileName = uri.lastPathSegment
+            if (fileName!!.contains(':'))
+                fileName = fileName.replace(':', '_')
+            if (uri.scheme.equals("content"))
+                fileName += ".${MimeTypeMap.getSingleton().getExtensionFromMimeType(context.contentResolver.getType(uri))}"
             copiedFilesPath.add(toDirectory + fileName)
-            if (!directoryFile.resolve(fileName).exists())
-                context.contentResolver.openInputStream(uri)?.copyTo(FileOutputStream("$toDirectory/$fileName"))
+            if (!directoryFile.resolve(fileName).exists()) {
+                if (imageFileParams.shouldCompress)
+                    BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri)).compress(Bitmap.CompressFormat.JPEG, imageFileParams.compressQuality, FileOutputStream("$toDirectory/$fileName"))
+                else
+                    context.contentResolver.openInputStream(uri)?.copyTo(FileOutputStream("$toDirectory/$fileName"))
+            }
         }
         return copiedFilesPath
     }

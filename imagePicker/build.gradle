@@ -12,12 +12,12 @@ configurations {
 uploadArchives {
     repositories.mavenDeployer {
         configuration = configurations.deployerJars
-        repository(url: "scpexe://prem.kumar@34.199.164.104/home/prem.kumar") {
+        repository(url: "scpexe://prem.kumar@34.199.164.104/home/prem.kumar/mavenRepo") {
 
         }
         pom.groupId = 'com.zoomrx.imagepicker'
-        pom.artifactId = 'imagepicker-debug-test'
-        pom.version = '3.0'
+        pom.artifactId = 'imagepicker-debug'
+        pom.version = '1.0'
     }
 }
 

@@ -37,7 +37,6 @@ class CameraFragment: Fragment(R.layout.camera_layout) {
     lateinit var preview: Preview
     lateinit var cameraProvider: ProcessCameraProvider
     lateinit var callBack: (Uri?, Int?, String?) -> Unit
-    private lateinit var cameraExecutor: ExecutorService
     private lateinit var previewView: PreviewView
     lateinit var cameraParams: CameraParams
     lateinit var outputFileOptions: ImageCapture.OutputFileOptions
@@ -251,7 +250,6 @@ class CameraFragment: Fragment(R.layout.camera_layout) {
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
     }
 
     companion object {
