@@ -92,10 +92,16 @@ class EditorFragment : Fragment() {
                 imagePropArray[selectedItemPosition].captionText = it.toString()
             }
         }
-        var index = imagePropArray.size - 1
-        while (index > editorParams.maxSelection) {
-            imagePropArray.removeAt(index--)
+        if (imagePropArray.size > editorParams.maxSelection) {
+            var index = imagePropArray.size - 1
+            var itemsRemoved = 0
+            while (index >= editorParams.maxSelection) {
+                imagePropArray.removeAt(index--)
+                itemsRemoved++
+            }
+            Toast.makeText(requireContext(), "Maximum ${editorParams.maxSelection} images can be selected. Discarded last $itemsRemoved images.", Toast.LENGTH_LONG).show()
         }
+
 
         adapter = ThumbnailListAdapter(imagePropArray, requireContext(), coroutineIOScope) {
             selectedImageChanged(it)

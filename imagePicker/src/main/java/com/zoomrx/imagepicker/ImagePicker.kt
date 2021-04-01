@@ -58,7 +58,7 @@ class ImagePicker(
 
     fun startCameraWorkFlow(cameraParams: CameraParams) {
         this.cameraParams = cameraParams
-        val fileName = imageFileParams.fileNamePrefix + "-${System.currentTimeMillis()}.JPEG"
+        val fileName = imageFileParams.fileNamePrefix + "-${System.currentTimeMillis()}.jpg"
         val outputFileOptions = try {
             createOutputFileOptions(imageFileParams.relativeDirectory, fileName, cameraParams.saveToGallery)
         } catch (ex: IOException) {
