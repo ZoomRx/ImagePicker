@@ -103,6 +103,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:id="@+id/undo_button"
+            android:layout_width="@dimen/nav_bar_item_width"
+            android:layout_height="match_parent"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/undo_crop"
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/ic_baseline_undo_24"
+            app:layout_constraintEnd_toStartOf="@id/delete_button"/>
+
+        <ImageButton
             android:id="@+id/delete_button"
             android:layout_width="@dimen/nav_bar_item_width"
             android:layout_height="match_parent"

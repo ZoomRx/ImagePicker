@@ -48,6 +48,8 @@ class EditorFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var imageView: ImageView
     private lateinit var captionEditText: EditText
+    private lateinit var undoButton: ImageButton
+    private lateinit var deleteButton: ImageButton
     lateinit var userInputLayout: LinearLayout
     lateinit var editorParams: EditorParams
     lateinit var imageFileParams: ImageFileParams
@@ -87,6 +89,7 @@ class EditorFragment : Fragment() {
         imageView = view.findViewById(R.id.image_full_preview)
         userInputLayout = view.findViewById(R.id.relativeLayout)
         captionEditText = view.findViewById(R.id.CaptionEditText)
+        undoButton = view.findViewById<ImageButton>(R.id.undo_button)
         if (editorParams.allowCaption) {
             captionEditText.addTextChangedListener {
                 imagePropArray[selectedItemPosition].captionText = it.toString()
@@ -101,7 +104,6 @@ class EditorFragment : Fragment() {
             }
             Toast.makeText(requireContext(), "Maximum ${editorParams.maxSelection} images can be selected. Discarded last $itemsRemoved images.", Toast.LENGTH_LONG).show()
         }
-
 
         adapter = ThumbnailListAdapter(imagePropArray, requireContext(), coroutineIOScope) {
             selectedImageChanged(it)
@@ -131,7 +133,7 @@ class EditorFragment : Fragment() {
         }
         onImagesReceived(imagePropArray, true)
         forceSelectImage(selectedItemPosition)
-        val deleteButton = view.findViewById<ImageButton>(R.id.delete_button)
+        deleteButton = view.findViewById(R.id.delete_button)
         if (imagePropArray.size > 1) {
             if (editorParams.allowDeletion) {
                 deleteButton.setOnClickListener {
@@ -142,6 +144,7 @@ class EditorFragment : Fragment() {
             }
         } else {
             recyclerView.visibility = View.GONE
+            deleteButton.visibility = View.GONE
         }
         applyCustomTheme(view)
         view.findViewById<ImageButton>(R.id.crop_rotate_button).setOnClickListener {
@@ -150,10 +153,22 @@ class EditorFragment : Fragment() {
         view.findViewById<ImageButton>(R.id.back_button).setOnClickListener {
             handleBackPressedEvent()
         }
-
         view.findViewById<ImageButton>(R.id.send_button).setOnClickListener {
             handleSendButtonClick()
         }
+
+        undoButton.visibility = View.GONE
+        undoButton.setOnClickListener {
+            handleUndoButtonClick()
+        }
+    }
+
+    private fun handleUndoButtonClick() {
+        imagePropArray[selectedItemPosition].editedUri?.toFile()?.deleteOnExit()
+        imagePropArray[selectedItemPosition].editedUri = null
+        imagePropArray[selectedItemPosition].fullSizeBitmap = null
+        constructBitmapForPreview(selectedItemPosition)
+        undoButton.visibility = View.GONE
     }
 
     private fun applyCustomTheme(view: View) {
@@ -213,8 +228,12 @@ class EditorFragment : Fragment() {
         imagePropArray.removeAt(index)
         adapter.notifyItemRemoved(index)
         if (imagePropArray.size > 0) {
+            if (imagePropArray.size == 1)
+                deleteButton.visibility = View.GONE
             if (index == imagePropArray.size)
                 forceSelectImage(index - 1)
+            else
+                forceSelectImage(index)
         } else {
             handleBackPressedEvent()
         }
@@ -228,6 +247,11 @@ class EditorFragment : Fragment() {
     private fun selectedImageChanged(index: Int) {
         selectedItemPosition = index
         selectedImageProp = adapter.imagePropArrayList[index].also {
+            if (it.editedUri != null) {
+                undoButton.visibility = View.VISIBLE
+            } else {
+                undoButton.visibility = View.GONE
+            }
             if (it.fullSizeBitmap == null) {
                 imageView.setImageDrawable(null)
                 progressBar.visibility = View.VISIBLE
@@ -278,6 +302,7 @@ class EditorFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            undoButton.visibility = View.VISIBLE
             imagePropArray[selectedItemPosition].editedUri = data?.let { UCrop.getOutput(it) }
             imagePropArray[selectedItemPosition].fullSizeBitmap = null
             constructBitmapForPreview(selectedItemPosition)

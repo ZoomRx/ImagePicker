@@ -10,7 +10,9 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,7 +47,7 @@ class ImagePicker(
     private lateinit var imagePickerActivity: ImagePickerActivity
     private lateinit var galleryParams: GalleryParams
     private lateinit var cameraParams: CameraParams
-    private lateinit var galleryActivityResultLauncher: ActivityResultLauncher<String>
+    private lateinit var galleryActivityResultLauncher: ActivityResultLauncher<Array<String>>
 
     private fun isPermissionGranted(requiredPermission: String): Boolean =
             ContextCompat.checkSelfPermission(imagePickerActivity, requiredPermission) == PackageManager.PERMISSION_GRANTED
@@ -176,7 +178,13 @@ class ImagePicker(
     private fun createGalleryActivityLauncher() {
         galleryActivityResultLauncher = if (galleryParams.allowMultiple) {
             imagePickerActivity.registerForActivityResult(
-                    ActivityResultContracts.GetMultipleContents()
+                    object : ActivityResultContracts.OpenMultipleDocuments() {
+                        override fun createIntent(context: Context, input: Array<out String>): Intent {
+                            val intent = super.createIntent(context, input)
+                            intent.addCategory(Intent.CATEGORY_OPENABLE)
+                            return intent
+                        }
+                    }
             ) { mutableList: List<Uri> ->
                 if (mutableList.isNotEmpty()) {
                     if (editorParams != null) {
@@ -213,7 +221,13 @@ class ImagePicker(
             }
         } else {
             imagePickerActivity.registerForActivityResult(
-                    ActivityResultContracts.GetContent()
+                    object : ActivityResultContracts.OpenDocument() {
+                        override fun createIntent(context: Context, input: Array<out String>): Intent {
+                            val intent = super.createIntent(context, input)
+                            intent.addCategory(Intent.CATEGORY_OPENABLE)
+                            return intent
+                        }
+                    }
             ) { uri: Uri? ->
                 if (uri != null) {
                     if (uri.path != null) {
@@ -240,7 +254,7 @@ class ImagePicker(
     }
 
     private fun startGalleryActivity() {
-        galleryActivityResultLauncher.launch("image/*")
+        galleryActivityResultLauncher.launch(arrayOf("image/*"))
     }
 
     private fun copyImageFiles(toDirectory: String, fileUriArrayList: Array<Uri>, compressFile: Boolean = false): ArrayList<String> {
@@ -252,10 +266,18 @@ class ImagePicker(
             var fileName = uri.lastPathSegment
             if (fileName!!.contains(':'))
                 fileName = fileName.replace(':', '_')
-            if (uri.scheme.equals("content"))
+            if (uri.scheme.equals("content")) {
                 fileName += ".${MimeTypeMap.getSingleton().getExtensionFromMimeType(context.contentResolver.getType(uri))}"
+                context.contentResolver.query(uri, null, null, null, null).use {
+                    val nameIndex = it?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    it?.moveToFirst()
+                    if (nameIndex != null) {
+                        fileName = it.getString(nameIndex)
+                    }
+                }
+            }
             copiedFilesPath.add(toDirectory + fileName)
-            if (!directoryFile.resolve(fileName).exists()) {
+            if (!directoryFile.resolve(fileName!!).exists()) {
                 if (imageFileParams.shouldCompress)
                     BitmapFactory.decodeStream(context.contentResolver.openInputStream(uri)).compress(Bitmap.CompressFormat.JPEG, imageFileParams.compressQuality, FileOutputStream("$toDirectory/$fileName"))
                 else
@@ -315,7 +337,7 @@ class ImagePicker(
         editorFragment.backPressedListener = { editFlow ->
             imagePickerActivity.supportFragmentManager.popBackStack()
             if (editFlow == EditorParams.EditFlow.FROM_GALLERY) {
-                galleryActivityResultLauncher.launch("image/*")
+                galleryActivityResultLauncher.launch(arrayOf("image/*"))
             }
         }
         editorFragment.onEditCompleteListener = { uriArray, captionArray ->
